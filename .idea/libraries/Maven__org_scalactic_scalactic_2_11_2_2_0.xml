@@ -8,6 +8,7 @@
     </JAVADOC>
     <SOURCES>
       <root url="jar://$MAVEN_REPOSITORY$/org/scalactic/scalactic_2.11/2.2.0/scalactic_2.11-2.2.0-sources.jar!/" />
+      <root url="file:///var/folders/nz/n4bxcds503qcb0_8h2f21_0c0000gn/T/intellijad" />
     </SOURCES>
   </library>
 </component>
