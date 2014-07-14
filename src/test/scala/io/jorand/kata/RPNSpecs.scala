@@ -32,10 +32,10 @@ class RPNSpecTest extends Specification {
       "2 3 + 5 * 10 / 0.5 -".calc === Good(2)
     }
     "validate the stack by checking the two first element" in {
-      "2 a +".calc === Bad(One("The first operands need to be numeric"))
+      "2 a +".calc === Bad(One("'a' => must be number"))
     }
     "validate the stack by checking the operators and numbers" in {
-      "2 a + 8 > b -".calc === Bad(Many("The first operands need to be numeric", "'b' => must be number", "'>' => bad operant"))
+      "2 a + 8 > b -".calc === Bad(Many("'a' => must be number", "'b' => must be number", "'>' => bad operant"))
     }
   }
 }
