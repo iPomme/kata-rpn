@@ -18,40 +18,33 @@ object RPN {
       stack.split(" ").toList
     }
 
-    def isNumber(n: String): ValidatedNel[String, BigDecimal] = {
+    def isNumber(n: String) = {
       try {
-        valid[NonEmptyList[String], BigDecimal](BigDecimal(n))
+        valid(BigDecimal(n))
       } catch {
         case e: Exception => invalidNel(s"$n $NotNumber")
       }
     }
 
-    def isOperator(o: String): ValidatedNel[String, String] = {
+    def isOperator(o: String) = {
       if ("+-*/".contains(o))
-        valid[NonEmptyList[String], String](o)
+        valid(o)
       else
         invalidNel(s"$o $NotOperator")
 
     }
 
-    def checkHeader(parsedStack: List[String]) = {
-      parsedStack.take(2).map(isNumber).sequenceU_
-    }
-
-    def checkOperator(parsedStack: List[String]) = {
-      parsedStack.drop(2).sliding(1, 2).flatten.toList.map(isOperator).sequenceU_
-    }
-
-    def checkNumbers(parsedStack: List[String]) = {
-      parsedStack.drop(3).sliding(1, 2).flatten.toList.map(isNumber).sequenceU_
+    def checkStack(parsedStack: List[String]) = {
+      val checkHeader = parsedStack.take(2).map(isNumber).sequenceU_
+      val checkOperator = parsedStack.drop(2).sliding(1, 2).flatten.toList.map(isOperator).sequenceU_
+      val checkNumbers = parsedStack.drop(3).sliding(1, 2).flatten.toList.map(isNumber).sequenceU_
+      checkHeader |@| checkOperator |@| checkNumbers
     }
 
     def calc() = {
       val parsedStack = parse()
 
-      val checkedStack = checkHeader(parsedStack) |@| checkOperator(parsedStack) |@| checkNumbers(parsedStack)
-
-      checkedStack.map { (_, _, _) =>
+      checkStack(parsedStack).map { (_, _, _) =>
         parsedStack.foldLeft(List[BigDecimal]()) {
           case (x :: y :: xs, "+") => y + x :: xs
           case (x :: y :: xs, "-") => y - x :: xs
